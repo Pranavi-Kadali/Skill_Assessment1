@@ -55,19 +55,27 @@ from pymongo import MongoClient
 ## Setup logging
 Logging in Python is used to track events that happen when your program runs.
 Instead of using print() to debug or monitor your app, logging lets you:
--Save messages to a file
--Add timestamps, error levels, and more context
--Control what gets recorded (info, warnings, errors, etc.)
+- Save messages to a file
+- Add timestamps, error levels, and more context
+- Control what gets recorded (info, warnings, errors, etc.)
 
 ```python
-logging.basicConfig(filename="app.log", level=logging.INFO)
+import logging
+
+logging.basicConfig(
+    filename="app.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+logger = logging.info("App started")
 ```
 
 
 ## Connect to MongoDB
 To connect a CLI (Command-Line Interface) to MongoDB using Python, you can use:
--The argparse module for CLI interaction
--The pymongo library to connect to MongoDB
+- The argparse module for CLI interaction
+- The pymongo library to connect to MongoDB
 
 ## Exception Handling
 Exception handling in Python is a way to deal with errors that happen while a program is running (called runtime errors or exceptions) — without crashing the program.
@@ -130,6 +138,7 @@ def delete_user(name):
         logging.error(f"Delete Error: {e}")
         print("Failed to delete user.")
 
+
 # CLI setup
 parser = argparse.ArgumentParser(description="Simple CLI CRUD App")
 parser.add_argument("action", choices=["create", "read", "update", "delete"])
@@ -161,7 +170,20 @@ elif args.action == "delete":
         print("Please provide --name.")
 ```
 
+### Exception Handling using decorators
 
+Instead of writing **try** and **except**, we can also use exceptional handling using decorator method.
+
+```python
+def handle_exceptions(func):
+    @wraps(func)
+    def wrapper (*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            return jsonify({"Error" : str(e) }), 500
+    return wrapper
+```
 
 ## How to Run the App
 
